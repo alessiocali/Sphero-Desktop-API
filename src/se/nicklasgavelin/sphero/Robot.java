@@ -78,11 +78,11 @@ public class Robot
 	 * The start of the Bluetooth address that is describing if the address
 	 * belongs to a Sphero device.
 	 */
-	public static final String ROBOT_ADDRESS_PREFIX = "00066";
+	public static final String[] ROBOT_ADDRESS_PREFIXES = { "00066", "6886E" };
 	// Robot controller
 	// private RobotController controller;
 	private static int error_num = 0;
-	private static final String[] invalidAddressResponses = new String[] { "The bluetooth address is invalid, the Sphero device bluetooth address must start with " + ROBOT_ADDRESS_PREFIX, "The address is still invalid, the Sphero bluetooth address must start with " + ROBOT_ADDRESS_PREFIX, "Check your frigging bluetooth address, it still need to start with " + ROBOT_ADDRESS_PREFIX, "I give up... You are not taking me seriously. Why would I give a hoot about bluetooth addresses anyway (Still need to start with " + ROBOT_ADDRESS_PREFIX + ")" };
+	private static final String[] invalidAddressResponses = new String[] { "The bluetooth address is invalid, the Sphero device bluetooth address must start with a valid prefix", "The address is still invalid, the Sphero bluetooth address must start with a valid prefix", "Check your frigging bluetooth address, it still need to start with a valid prefix", "I give up... You are not taking me seriously. Why would I give a hoot about bluetooth addresses anyway (Still need to start with a valid prefix" + ")" };
 
 	/**
 	 * Create a robot from a Bluetooth device. You need to call Robot.connect
@@ -1114,7 +1114,10 @@ public class Robot
 	 */
 	public static boolean isValidAddress( String address )
 	{
-		return( address.startsWith( ROBOT_ADDRESS_PREFIX ) );
+		for (String valid : ROBOT_ADDRESS_PREFIXES) {
+			if (address.startsWith(valid)) { return true; }
+		}
+		return false;
 	}
 
 	/**
@@ -1148,7 +1151,7 @@ public class Robot
 	 */
 	public static boolean isValidDevice( BluetoothDevice device )
 	{
-		return( device.getAddress().startsWith( ROBOT_ADDRESS_PREFIX ) );
+		return( isValidAddress(device.getAddress()) );
 	}
 
 	/**
