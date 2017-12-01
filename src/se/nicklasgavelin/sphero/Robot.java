@@ -369,6 +369,7 @@ public class Robot
 		this.sendSystemCommand( new CalibrateCommand( this.movement.getHeading() ) );
 		this.sendSystemCommand( new FrontLEDCommand( this.led.getFrontLEDBrightness() ) );
 		this.sendSystemCommand( new RGBLEDCommand( this.getLed().getRGBColor() ) );
+		this.sendSystemCommand( new ConfigureLocatorCommand( false, (short)0, (short)0, (short)0 ) );
 
 		// Create our pinger
 		this.sendSystemCommand( new PingCommand( this ), PING_INTERVAL, PING_INTERVAL );

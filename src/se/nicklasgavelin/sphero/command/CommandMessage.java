@@ -213,6 +213,8 @@ public class CommandMessage
         SAVE_MACRO( 82, 2 ),
         ABORT_MACRO( 85, 2 ),
         SET_DATA_STREAMING( 17, 2 ),
+        READ_LOCATOR( 21, 2 ),
+        CONFIGURE_LOCATOR(19, 2),
         SPIN_LEFT( RAW_MOTOR.getCommandId(), RAW_MOTOR.getDeviceId() ),
         SPIN_RIGHT( RAW_MOTOR.getCommandId(), RAW_MOTOR.getDeviceId() ),
         CUSTOM_PING( FRONT_LED_OUTPUT.getCommandId(), FRONT_LED_OUTPUT.getDeviceId() );
