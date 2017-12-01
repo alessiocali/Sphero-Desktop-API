@@ -1,8 +1,13 @@
 package se.nicklasgavelin.sphero.response.regular;
 
+import se.nicklasgavelin.log.Logging;
 import se.nicklasgavelin.sphero.response.ResponseMessage;
 
 public class LocatorResponse extends ResponseMessage {
+	
+	private static final int PAYLOAD_LENGTH = 10;
+	private static final int LOC_X_INDEX = 0, LOC_Y_INDEX = 2, LOC_XS_INDEX = 4,
+							 LOC_YS_INDEX = 6, LOC_SOG_INDEX = 8;
 
 	private byte[] rawData;
 	private int x = 0;
@@ -15,13 +20,13 @@ public class LocatorResponse extends ResponseMessage {
 		super(_drh);
 		if (!isCorrupt()) {
 			rawData = this.getPacketPayload();
-			if (rawData.length < 10) { System.err.println("Invalid IMU data length"); }
+			if (rawData.length < PAYLOAD_LENGTH) { Logging.error("Invalid IMU data length"); }
 			else {
-				x = bytesToInt(rawData[0], rawData[1]);
-				y = bytesToInt(rawData[2], rawData[3]);
-				xs = bytesToInt(rawData[4], rawData[5]);
-				ys = bytesToInt(rawData[6], rawData[7]);
-				sog = bytesToInt(rawData[8], rawData[9]);
+				x = bytesToInt(rawData[LOC_X_INDEX], rawData[LOC_X_INDEX + 1]);
+				y = bytesToInt(rawData[LOC_Y_INDEX], rawData[LOC_Y_INDEX + 1]);
+				xs = bytesToInt(rawData[LOC_XS_INDEX], rawData[LOC_XS_INDEX + 1]);
+				ys = bytesToInt(rawData[LOC_YS_INDEX], rawData[LOC_YS_INDEX + 1]);
+				sog = bytesToInt(rawData[LOC_SOG_INDEX], rawData[LOC_SOG_INDEX + 1]);
 			}
 		}
 	}

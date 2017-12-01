@@ -1270,7 +1270,7 @@ public class Robot
 		 */
 		protected void enqueue( Pair<CommandMessage, Boolean> cmd )
 		{
-			this.waitingForResponse.add( cmd );
+			synchronized (waitingForResponse) { this.waitingForResponse.add( cmd ); }
 		}
 
 		/**
@@ -1399,7 +1399,21 @@ public class Robot
 								// on a message
 								// we sent earlier, now check which message that this
 								// response corresponds to
-								Pair<CommandMessage, Boolean> cmd = waitingForResponse.remove();
+								Pair<CommandMessage, Boolean> cmd;
+								
+								// This is a sort of hack to safeguard from out of order packets.
+								// Basically, if the received SeqNo is > than that of the first waiting message,
+								// all messages coming from the Sphero until this one have been lost.
+								// So, just skip all the previous messages.
+								synchronized (waitingForResponse) { 
+									while ((byte)(cmd = waitingForResponse.remove()).getFirst().getSequenceNumber() < drh.getSequenceNumber()) {
+										Logging.warn(String.format("Out of order message. Expected %d but was %d. Waiting command was %s", 
+												cmd.getFirst().getSequenceNumber(), 
+												drh.getSequenceNumber(), 
+												cmd.getFirst().getClass().getSimpleName())
+										);
+									}
+								}
 
 								// Fetch the type of command that we sent, this is used
 								// for debugging purposes
